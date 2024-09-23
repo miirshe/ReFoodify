@@ -13,6 +13,7 @@ const Cart = () => {
     getCartItemsCount,
     getDiscountAmount,
     getRewardBonus,
+    saveOrderHistory,
   } = useCartStore();
 
   const totalItems = getCartItemsCount(); // Get total items directly
@@ -20,6 +21,12 @@ const Cart = () => {
   const totalDiscount = getDiscountAmount(); // Get discount amount
   const rewardBonus = getRewardBonus(); // Get reward bonus
 
+  const handleCheckout = () => {
+    const currentDate = new Date().toLocaleDateString();
+    const items = cart.map((item) => ({ ...item, date: currentDate }))
+    saveOrderHistory(items);
+    clearCart();
+  };
   if (cart.length === 0) {
     return (
       <div className="container mx-auto p-4 text-center">
@@ -110,7 +117,7 @@ const Cart = () => {
                 <span>{rewardBonus.toFixed(2)} €</span>
               </div>
             </div>
-            <button className="cart-summary-button" onClick={clearCart}>
+            <button className="cart-summary-button" onClick={handleCheckout}>
               Check out
             </button>
           </div>

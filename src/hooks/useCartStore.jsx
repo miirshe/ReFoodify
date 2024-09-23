@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 // Utility function to parse the price with a comma format
-const parsePrice = (priceString) => {
+export const parsePrice = (priceString) => {
   const cleanedPrice = priceString
     .replace(/[^\d,.-]/g, "") // Remove non-numeric characters
     .replace(",", "."); // Convert comma to dot for decimal
@@ -10,6 +10,7 @@ const parsePrice = (priceString) => {
 
 const useCartStore = create((set, get) => ({
   cart: JSON.parse(localStorage.getItem("cart")) || [],
+  orderHistory: JSON.parse(localStorage.getItem("orderHistory")) || {},
 
   addToCart: (product, quantity = 1) => {
     set((state) => {
@@ -57,6 +58,15 @@ const useCartStore = create((set, get) => ({
     set(() => {
       localStorage.setItem("cart", JSON.stringify([]));
       return { cart: [] };
+    });
+  },
+
+  // Save order history
+  saveOrderHistory: (order) => {
+    set((state) => {
+      const updatedOrderHistory = { ...state.orderHistory, order };
+      localStorage.setItem("orderHistory", JSON.stringify(updatedOrderHistory));
+      return { orderHistory: updatedOrderHistory };
     });
   },
 
